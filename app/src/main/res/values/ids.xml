@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="car_detail_drehmoment" type="id" />
+    <item name="cardView_id" type="id" />
+    <item name="car_detail_id" type="id" />
+    <item name="cardView_marke" type="id" />
+    <item name="car_detail_marke" type="id" />
+    <item name="cardView_model" type="id" />
+    <item name="car_detail_model" type="id" />
+    <item name="cardView_farbe" type="id" />
+    <item name="car_detail_farbe" type="id" />
+    <item name="cardView_leistung" type="id" />
+    <item name="car_detail_leistung" type="id" />
+    <item name="cardView_gewicht" type="id" />
+    <item name="car_detail_gewicht" type="id" />
+    <item name="cardView_drehmoment" type="id" />
+    <item name="car_detail_tueren" type="id" />
+    <item name="cardView_tueren" type="id" />
+    <item name="car_detail_motor_art" type="id" />
+    <item name="cardView_motor_art" type="id" />
+    <item name="cardView_klasse" type="id"></item>
+    <item name="car_detail_klasse" type="id" />
+</resources>
