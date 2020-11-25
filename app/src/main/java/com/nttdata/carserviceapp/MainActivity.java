@@ -87,9 +87,7 @@ public class MainActivity extends AppCompatActivity implements Adapter.ClickList
                                 tempCar.setTueren(car.getInt("tueren"));
                                 tempCar.setKlasse(car.getString("klasse"));
                                 tempCar.setMotor_art(car.getString("motor_art"));
-                                Log.e("CAR:", tempCar.getId().toString());
                                 localCarList.add(tempCar);
-                                Log.e("CarList:", localCarList.toString());
                             }
                             adapter.notifyDataSetChanged();
                         } catch (JSONException e) {
@@ -194,6 +192,11 @@ public class MainActivity extends AppCompatActivity implements Adapter.ClickList
                 deleteCar(getCarPosition());
                 mode.finish();
                 return true;
+            } else if (item.getItemId() == R.id.edit_car){
+                Intent intent = new Intent(MainActivity.this, CarEditActivity.class);
+                intent.putExtra("CAR", getLocalCarList().get(getCarPosition()));
+                startActivity(intent);
+                mode.finish();
             }
             return false;
         }

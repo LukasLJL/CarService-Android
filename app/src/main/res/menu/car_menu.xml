@@ -6,4 +6,9 @@
         android:title="Delete Car"
         android:icon="@drawable/ic_delete" />
 
+    <item
+        android:id="@+id/edit_car"
+        android:title="Edit Car"
+        android:icon="@drawable/ic_edit" />
+
 </menu>

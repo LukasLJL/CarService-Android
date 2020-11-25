@@ -16,7 +16,7 @@
             android:orientation="vertical" >
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardView1"
+                android:id="@+id/cardView_car_ec_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -29,7 +29,47 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/textView_marke"
+                        android:id="@+id/textView_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Car-ID"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/editText_car_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:ems="10"
+                        android:hint="21"
+                        android:enabled="false"
+                        android:focusable="false"
+                        android:cursorVisible="false"
+                        android:focusableInTouchMode="false"
+                        android:inputType="text"
+                        android:textAlignment="center" />
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView_car_ec_brand"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView_brand"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -38,7 +78,7 @@
                         android:textStyle="bold" />
 
                     <EditText
-                        android:id="@+id/editText_CreateCar_marke"
+                        android:id="@+id/editText_car_brand"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -51,7 +91,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardView2"
+                android:id="@+id/cardView_car_ec_model"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -73,7 +113,7 @@
                         android:textStyle="bold" />
 
                     <EditText
-                        android:id="@+id/editText_CreateCar_model"
+                        android:id="@+id/editText_car_model"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -86,7 +126,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardView3"
+                android:id="@+id/cardView_car_ec_color"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -108,7 +148,7 @@
                         android:textStyle="bold" />
 
                     <EditText
-                        android:id="@+id/editText_CreateCar_farbe"
+                        android:id="@+id/editText_car_color"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -121,7 +161,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardView4"
+                android:id="@+id/cardView_car_ec_power"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -143,7 +183,7 @@
                         android:textStyle="bold" />
 
                     <EditText
-                        android:id="@+id/editText_CreateCar_leistung"
+                        android:id="@+id/editText_car_power"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -156,7 +196,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardView5"
+                android:id="@+id/cardView_car_ec_torque"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -178,7 +218,7 @@
                         android:textStyle="bold" />
 
                     <EditText
-                        android:id="@+id/editText_CreateCar_drehmoment"
+                        android:id="@+id/editText_car_torque"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -191,7 +231,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardView6"
+                android:id="@+id/cardView_car_ec_weight"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -213,7 +253,7 @@
                         android:textStyle="bold" />
 
                     <EditText
-                        android:id="@+id/editText_CreateCar_gewicht"
+                        android:id="@+id/editText_car_weight"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -226,7 +266,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardView7"
+                android:id="@+id/cardView_doors"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -248,7 +288,7 @@
                         android:textStyle="bold" />
 
                     <EditText
-                        android:id="@+id/editText_CreateCar_tueren"
+                        android:id="@+id/editText_car_doors"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -261,7 +301,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardView8"
+                android:id="@+id/cardView_car_ec_engineTyp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -283,7 +323,7 @@
                         android:textStyle="bold" />
 
                     <EditText
-                        android:id="@+id/editText_CreateCar_motor_art"
+                        android:id="@+id/editText_car_engineTyp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -296,7 +336,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardView9"
+                android:id="@+id/cardView_car_ec_carTyp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -309,7 +349,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/textView_klasse"
+                        android:id="@+id/textView_carTyp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -318,7 +358,7 @@
                         android:textStyle="bold" />
 
                     <EditText
-                        android:id="@+id/editText_CreateCar_klasse"
+                        android:id="@+id/editText_car_carTyp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -331,11 +371,21 @@
             </androidx.cardview.widget.CardView>
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/button_car_create"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="createCarButton"
                 android:text="Create Car!"
+                android:layout_gravity="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <Button
+                android:id="@+id/button_car_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="editCarButton"
+                android:text="Edit Car!"
                 android:layout_gravity="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />

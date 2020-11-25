@@ -11,16 +11,16 @@ import androidx.appcompat.app.AppCompatActivity;
 public class CarDetailsActivity extends AppCompatActivity  {
 
     //declare all textViews
-    private TextView id;
-    private TextView marke;
-    private TextView model;
-    private TextView leistung;
-    private TextView gewicht;
-    private TextView drehmoment;
-    private TextView tueren;
-    private TextView farbe;
-    private TextView motor_art;
-    private TextView klasse;
+    private TextView textView_id;
+    private TextView textView_marke;
+    private TextView textView_model;
+    private TextView textView_leistung;
+    private TextView textView_gewicht;
+    private TextView textView_drehmoment;
+    private TextView textView_tueren;
+    private TextView textView_farbe;
+    private TextView textView_motor_art;
+    private TextView textView_klasse;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -31,29 +31,29 @@ public class CarDetailsActivity extends AppCompatActivity  {
         Bundle bundle = iin.getExtras();
 
         //init all TextViews
-        id = findViewById(R.id.car_detail_id);
-        marke = findViewById(R.id.car_detail_marke);
-        model = findViewById(R.id.car_detail_model);
-        leistung = findViewById(R.id.car_detail_leistung);
-        gewicht = findViewById(R.id.car_detail_gewicht);
-        drehmoment = findViewById(R.id.car_detail_drehmoment);
-        tueren = findViewById(R.id.car_detail_tueren);
-        farbe = findViewById(R.id.car_detail_farbe);
-        motor_art = findViewById(R.id.car_detail_motor_art);
-        klasse = findViewById(R.id.car_detail_klasse);
+        textView_id = findViewById(R.id.car_detail_id);
+        textView_marke = findViewById(R.id.car_detail_marke);
+        textView_model = findViewById(R.id.car_detail_model);
+        textView_leistung = findViewById(R.id.car_detail_leistung);
+        textView_gewicht = findViewById(R.id.car_detail_gewicht);
+        textView_drehmoment = findViewById(R.id.car_detail_drehmoment);
+        textView_tueren = findViewById(R.id.car_detail_tueren);
+        textView_farbe = findViewById(R.id.car_detail_farbe);
+        textView_motor_art = findViewById(R.id.car_detail_motor_art);
+        textView_klasse = findViewById(R.id.car_detail_klasse);
 
         if (bundle != null){
             Car detailCar = (Car) bundle.get("CAR");
-            id.setText(detailCar.getId().toString());
-            marke.setText(detailCar.getMarke());
-            model.setText(detailCar.getModel());
-            leistung.setText(detailCar.getLeistung() + " ps");
-            gewicht.setText(detailCar.getGewicht() + " kg");
-            drehmoment.setText(detailCar.getDrehmoment() + " nm");
-            tueren.setText(String.valueOf(detailCar.getTueren()));
-            farbe.setText(detailCar.getFarbe());
-            motor_art.setText(detailCar.getMotor_art());
-            klasse.setText(detailCar.getKlasse());
+            textView_id.setText(detailCar.getId().toString());
+            textView_marke.setText(detailCar.getMarke());
+            textView_model.setText(detailCar.getModel());
+            textView_leistung.setText(detailCar.getLeistung() + " ps");
+            textView_gewicht.setText(detailCar.getGewicht() + " kg");
+            textView_drehmoment.setText(detailCar.getDrehmoment() + " nm");
+            textView_tueren.setText(String.valueOf(detailCar.getTueren()));
+            textView_farbe.setText(detailCar.getFarbe());
+            textView_motor_art.setText(detailCar.getMotor_art());
+            textView_klasse.setText(detailCar.getKlasse());
         }
 
     }

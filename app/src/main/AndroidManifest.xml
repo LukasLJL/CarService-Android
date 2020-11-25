@@ -22,6 +22,7 @@
         </activity>
         <activity android:name=".CarDetailsActivity" />
         <activity android:name=".CarCreateActivity" />
+        <activity android:name=".CarEditActivity" />
     </application>
 
 </manifest>

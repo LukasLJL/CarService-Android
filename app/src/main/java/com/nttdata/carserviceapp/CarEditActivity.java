@@ -1,5 +1,6 @@
 package com.nttdata.carserviceapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,8 +22,9 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class CarCreateActivity extends AppCompatActivity {
+public class CarEditActivity extends AppCompatActivity {
 
+    private EditText editText_id;
     private EditText editText_marke;
     private EditText editText_model;
     private EditText editText_leistung;
@@ -35,6 +37,8 @@ public class CarCreateActivity extends AppCompatActivity {
     private CardView cardView_id;
     private Button editButton;
     private Button createButton;
+    private Car toEditCar;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,11 +49,11 @@ public class CarCreateActivity extends AppCompatActivity {
         editButton = findViewById(R.id.button_car_edit);
         createButton = findViewById(R.id.button_car_create);
 
-        cardView_id.setVisibility(View.GONE);
-        editButton.setVisibility(View.GONE);
-        createButton.setVisibility(View.VISIBLE);
+        cardView_id.setVisibility(View.VISIBLE);
+        editButton.setVisibility(View.VISIBLE);
+        createButton.setVisibility(View.GONE);
 
-
+        editText_id = findViewById(R.id.editText_car_id);
         editText_marke = findViewById(R.id.editText_car_brand);
         editText_model = findViewById(R.id.editText_car_model);
         editText_leistung = findViewById(R.id.editText_car_power);
@@ -59,52 +63,67 @@ public class CarCreateActivity extends AppCompatActivity {
         editText_farbe = findViewById(R.id.editText_car_color);
         editText_motor_art = findViewById(R.id.editText_car_engineTyp);
         editText_klasse = findViewById(R.id.editText_car_carTyp);
+
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+
+        if (bundle != null) {
+            toEditCar = (Car) bundle.get("CAR");
+            editText_id.setHint(toEditCar.getId().toString());
+            editText_marke.setHint(toEditCar.getMarke());
+            editText_model.setHint(toEditCar.getModel());
+            editText_leistung.setHint(String.valueOf(toEditCar.getLeistung()));
+            editText_gewicht.setHint(String.valueOf(toEditCar.getGewicht()));
+            editText_drehmoment.setHint(String.valueOf(toEditCar.getDrehmoment()));
+            editText_tueren.setHint(String.valueOf(toEditCar.getTueren()));
+            editText_farbe.setHint(toEditCar.getFarbe());
+            editText_motor_art.setHint(toEditCar.getMotor_art());
+            editText_klasse.setHint(toEditCar.getKlasse());
+        }
     }
 
 
-    public void createCarButton(View view) throws JSONException {
-        Car createCar = new Car();
+    public void editCarButton(View view) throws JSONException {
+        Car editCar = new Car();
+        editCar.setId(toEditCar.getId());
+
         if (editText_marke != null && !(editText_marke.getText().length() == 0)) {
-            createCar.setMarke(editText_marke.getText().toString());
+            editCar.setMarke(editText_marke.getText().toString());
         }
         if (editText_model != null && !(editText_model.getText().length() == 0)) {
-            createCar.setModel(editText_model.getText().toString());
+            editCar.setModel(editText_model.getText().toString());
         }
-        if (editText_gewicht !=null && !(editText_gewicht.getText().length() == 0)){
-            createCar.setGewicht(Integer.parseInt(editText_gewicht.getText().toString()));
+        if (editText_gewicht != null && !(editText_gewicht.getText().length() == 0)) {
+            editCar.setGewicht(Integer.parseInt(editText_gewicht.getText().toString()));
         }
         if (editText_leistung != null && !(editText_leistung.getText().length() == 0)) {
-            createCar.setLeistung(Integer.parseInt((editText_leistung.getText()).toString()));
+            editCar.setLeistung(Integer.parseInt((editText_leistung.getText()).toString()));
         }
         if (editText_drehmoment != null && !(editText_drehmoment.getText().length() == 0)) {
-            createCar.setDrehmoment(Integer.parseInt(editText_drehmoment.getText().toString()));
+            editCar.setDrehmoment(Integer.parseInt(editText_drehmoment.getText().toString()));
         }
         if (editText_tueren != null && !(editText_tueren.getText().length() == 0)) {
-            createCar.setTueren(Integer.parseInt(editText_tueren.getText().toString()));
+            editCar.setTueren(Integer.parseInt(editText_tueren.getText().toString()));
         }
         if (editText_farbe != null && !(editText_farbe.getText().length() == 0)) {
-            createCar.setFarbe(editText_farbe.getText().toString());
+            editCar.setFarbe(editText_farbe.getText().toString());
         }
         if (editText_motor_art != null && !(editText_motor_art.getText().length() == 0)) {
-            createCar.setMotor_art(editText_motor_art.getText().toString());
+            editCar.setMotor_art(editText_motor_art.getText().toString());
         }
         if (editText_klasse != null && !(editText_klasse.getText().length() == 0)) {
-            createCar.setKlasse(editText_klasse.getText().toString());
+            editCar.setKlasse(editText_klasse.getText().toString());
         }
 
-
-        String url = "http://192.168.178.55:8080/car/create";
+        String url = "http://192.168.178.55:8080/car/edit";
         RequestQueue queue = Volley.newRequestQueue(this);
 
         Gson gson = new Gson();
-        String carJSON = gson.toJson(createCar);
+        String carJSON = gson.toJson(editCar);
 
         JSONObject json = new JSONObject(carJSON);
 
-
-        Log.e("JSON", carJSON.toString());
-
-        JsonObjectRequest createRequest = new JsonObjectRequest(Request.Method.POST, url, json,
+        JsonObjectRequest editRequest = new JsonObjectRequest(Request.Method.PUT, url, json,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -120,6 +139,8 @@ public class CarCreateActivity extends AppCompatActivity {
                     }
                 });
 
-        queue.add(createRequest);
+        queue.add(editRequest);
     }
+
 }
+
