@@ -14,30 +14,12 @@ import androidx.appcompat.view.ActionMode;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-
 public class MainActivity extends AppCompatActivity implements Adapter.ClickListener {
 
-    private ArrayList<Car> localCarList = new ArrayList<>();
-
-    private int carPosition;
     private CarHandler carHandler;
     private ActionMode actionMode;
     private RecyclerView recyclerView;
     private Adapter adapter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,92 +33,21 @@ public class MainActivity extends AppCompatActivity implements Adapter.ClickList
         //setup CarHandler
         carHandler = new CarHandler();
 
-        //download car from server
-        getCars();
-
         //setup recyclerView adapter
-        adapter = new Adapter(MainActivity.this, getLocalCarList(), MainActivity.this);
+        adapter = new Adapter(MainActivity.this, carHandler.getLocalCarList(), MainActivity.this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
+        //download car from server
+        carHandler.getAllCars(this, adapter, MainActivity.this);
     }
 
-    public void getCars() {
-
-        String url = "http://192.168.178.55:8080/car/list";
-        RequestQueue queue = Volley.newRequestQueue(this);
-
-
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            for (Iterator<String> it = response.keys(); it.hasNext(); ) {
-                                String car_key = it.next();
-                                JSONObject car = response.getJSONObject(car_key);
-
-                                Car tempCar = new Car();
-
-                                tempCar.setId(car.getInt("id"));
-                                tempCar.setMarke(car.getString("marke"));
-                                tempCar.setModel(car.getString("model"));
-                                tempCar.setFarbe(car.getString("farbe"));
-                                tempCar.setGewicht(car.getInt("gewicht"));
-                                tempCar.setDrehmoment(car.getInt("drehmoment"));
-                                tempCar.setLeistung(car.getInt("leistung"));
-                                tempCar.setTueren(car.getInt("tueren"));
-                                tempCar.setKlasse(car.getString("klasse"));
-                                tempCar.setMotor_art(car.getString("motor_art"));
-                                localCarList.add(tempCar);
-                            }
-                            adapter.notifyDataSetChanged();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(MainActivity.this, "Error getting Server Data", Toast.LENGTH_LONG).show();
-                        Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                });
-        queue.add(request);
-    }
-
-    public void deleteCar(int id) {
-        int carID = getRealCarID(id);
-        String url = "http://192.168.178.55:8080/car/delete/" + carID;
-
-        RequestQueue queue = Volley.newRequestQueue(this);
-
-        StringRequest deleteRequest = new StringRequest(Request.Method.DELETE, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.e("Respomse: ", response);
-                        reloadData();
-                    }
-
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("Error:", error.getMessage());
-                    }
-                });
-        queue.add(deleteRequest);
-    }
-
-    public int getRealCarID(int carPosition) {
-        return getLocalCarList().get(carPosition).getId();
-    }
 
     public void reloadData(){
-        localCarList.clear();
+        carHandler.getLocalCarList().clear();
         recyclerView.removeAllViews();
-        getCars();
+        carHandler.getAllCars(this, adapter, MainActivity.this);
     }
 
 
@@ -151,14 +62,16 @@ public class MainActivity extends AppCompatActivity implements Adapter.ClickList
         startActivity(intent);
     }
 
+    //ItemClick Stuff for RecyclerView..
+
     @Override
     public void onItemClick(int position, View v) {
         //Toast Message
-        Toast.makeText(this, "Selected Car " + getLocalCarList().get(position).getMarke(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Selected Car " + carHandler.getLocalCarList().get(position).getMarke(), Toast.LENGTH_SHORT).show();
 
         //Load CarDetailActivity
         Intent intent = new Intent(this, CarDetailsActivity.class);
-        intent.putExtra("CAR", getLocalCarList().get(position));
+        intent.putExtra("CAR", carHandler.getLocalCarList().get(position));
         startActivity(intent);
     }
 
@@ -167,9 +80,11 @@ public class MainActivity extends AppCompatActivity implements Adapter.ClickList
         if (actionMode != null) {
             actionMode.finish();
         }
-        setCarPosition(position);
+        carHandler.setCarPosition(position);
         actionMode = startSupportActionMode(actionModeCallback);
     }
+
+    //Stuff for Navigation Bar
 
     private final ActionMode.Callback actionModeCallback = new ActionMode.Callback() {
         @Override
@@ -188,13 +103,13 @@ public class MainActivity extends AppCompatActivity implements Adapter.ClickList
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             actionMode = mode;
             if (item.getItemId() == R.id.delete_car) {
-                Log.e("INFO", "CAR-ID:" + getCarPosition() + " | RCAR-ID: " + getRealCarID(getCarPosition()));
-                deleteCar(getCarPosition());
+                Log.e("INFO", "CAR-ID:" + carHandler.getCarPosition() + " | RCAR-ID: " + carHandler.getRealCarID(carHandler.getCarPosition()));
+                carHandler.deleteCar(MainActivity.this, carHandler.getCarPosition(), MainActivity.this);
                 mode.finish();
                 return true;
             } else if (item.getItemId() == R.id.edit_car){
                 Intent intent = new Intent(MainActivity.this, CarEditActivity.class);
-                intent.putExtra("CAR", getLocalCarList().get(getCarPosition()));
+                intent.putExtra("CAR", carHandler.getLocalCarList().get(carHandler.getCarPosition()));
                 startActivity(intent);
                 mode.finish();
             }
@@ -206,17 +121,4 @@ public class MainActivity extends AppCompatActivity implements Adapter.ClickList
             actionMode = null;
         }
     };
-
-    public ArrayList<Car> getLocalCarList() {
-        return localCarList;
-    }
-
-    public int getCarPosition() {
-        return carPosition;
-    }
-
-    public void setCarPosition(int carPosition) {
-        this.carPosition = carPosition;
-    }
-
 }

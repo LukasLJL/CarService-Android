@@ -1,7 +1,6 @@
 package com.nttdata.carserviceapp;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,18 +9,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
-
 import org.json.JSONException;
-import org.json.JSONObject;
 
 public class CarCreateActivity extends AppCompatActivity {
+
+    private CarHandler carHandler;
 
     private EditText editText_marke;
     private EditText editText_model;
@@ -40,6 +32,8 @@ public class CarCreateActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.car_create);
+
+        carHandler = new CarHandler();
 
         cardView_id = findViewById(R.id.cardView_car_ec_id);
         editButton = findViewById(R.id.button_car_edit);
@@ -92,34 +86,6 @@ public class CarCreateActivity extends AppCompatActivity {
             createCar.setKlasse(editText_klasse.getText().toString());
         }
 
-
-        String url = "http://192.168.178.55:8080/car/create";
-        RequestQueue queue = Volley.newRequestQueue(this);
-
-        Gson gson = new Gson();
-        String carJSON = gson.toJson(createCar);
-
-        JSONObject json = new JSONObject(carJSON);
-
-
-        Log.e("JSON", carJSON.toString());
-
-        JsonObjectRequest createRequest = new JsonObjectRequest(Request.Method.POST, url, json,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.e("Response Create", response.toString());
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("Error", error.getMessage());
-
-                    }
-                });
-
-        queue.add(createRequest);
+        carHandler.createCar(this, createCar);
     }
 }

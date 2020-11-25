@@ -1,11 +1,8 @@
 package com.nttdata.carserviceapp;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
-
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -14,6 +11,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,18 +20,19 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class CarHandler {
+
+    private String API_IP = "http://192.168.178.55:8080/car";
+
     private ArrayList<Car> localCarList = new ArrayList<>();
     private int carPosition;
-    private Context localContext;
 
 
-    public void getCars(Context context) {
+    public void getAllCars(Context context, Adapter adapter, Context mainActivityContext) {
+        String getURL = API_IP + "/list";
 
-        String url = "http://192.168.178.20:8080/car/list";
         RequestQueue queue = Volley.newRequestQueue(context);
-        localContext = context;
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, getURL, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -54,10 +53,10 @@ public class CarHandler {
                                 tempCar.setTueren(car.getInt("tueren"));
                                 tempCar.setKlasse(car.getString("klasse"));
                                 tempCar.setMotor_art(car.getString("motor_art"));
-                                Log.e("CAR:", tempCar.getId().toString());
+
                                 localCarList.add(tempCar);
-                                Log.e("CarList:", localCarList.toString());
                             }
+                            adapter.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -66,26 +65,25 @@ public class CarHandler {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(context, "Error getting Server Data", Toast.LENGTH_LONG).show();
-                        Toast.makeText(context, error.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(mainActivityContext, "Error getting Server Data", Toast.LENGTH_LONG).show();
+                        Toast.makeText(mainActivityContext, error.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
         queue.add(request);
     }
 
-    public void deleteCar(int id) {
+    public void deleteCar(Context context, int id, MainActivity mainActivity) {
         int carID = getRealCarID(id);
-        String url = "http://192.168.178.20:8080/car/delete/" + carID;
 
-        Log.e("DELETE", "Call");
+        String url = API_IP + "/delete/" + carID;
 
-        RequestQueue queue = Volley.newRequestQueue(localContext);
+        RequestQueue queue = Volley.newRequestQueue(context);
 
         StringRequest deleteRequest = new StringRequest(Request.Method.DELETE, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.e("Respomse: ", response);
+                        mainActivity.reloadData();
                     }
                 },
                 new Response.ErrorListener() {
@@ -95,8 +93,66 @@ public class CarHandler {
                     }
                 });
         queue.add(deleteRequest);
+    }
+
+    public void editCar(Context context, Car editCar) throws JSONException {
+        String url = API_IP + "/edit";
+        RequestQueue queue = Volley.newRequestQueue(context);
+
+        Gson gson = new Gson();
+        String carJSON = gson.toJson(editCar);
+
+        JSONObject json = new JSONObject(carJSON);
+
+        JsonObjectRequest editRequest = new JsonObjectRequest(Request.Method.PUT, url, json,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.e("Response Create", response.toString());
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("Error", error.getMessage());
+
+                    }
+                });
+
+        queue.add(editRequest);
+    }
+
+    public void createCar(Context context, Car createCar) throws JSONException {
+
+        String url = API_IP + "/create";
+        RequestQueue queue = Volley.newRequestQueue(context);
+
+        Gson gson = new Gson();
+        String carJSON = gson.toJson(createCar);
+
+        JSONObject json = new JSONObject(carJSON);
 
 
+        Log.e("JSON", carJSON.toString());
+
+        JsonObjectRequest createRequest = new JsonObjectRequest(Request.Method.POST, url, json,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.e("Response Create", response.toString());
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("Error", error.getMessage());
+
+                    }
+                });
+
+        queue.add(createRequest);
     }
 
     public int getRealCarID(int carPosition) {
