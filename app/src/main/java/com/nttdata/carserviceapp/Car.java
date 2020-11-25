@@ -13,6 +13,7 @@ public class Car implements Serializable {
     private String farbe;
     private int tueren;
     private String klasse;
+    private String motor_art;
 
     public Car() {
 
@@ -98,7 +99,9 @@ public class Car implements Serializable {
         this.motor_art = motor_art;
     }
 
-    private String motor_art;
+
+
+
 
 
 
