@@ -2,6 +2,7 @@ package com.nttdata.carserviceapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class MainActivity extends AppCompatActivity implements Adapter.ClickListener {
 
@@ -20,11 +22,15 @@ public class MainActivity extends AppCompatActivity implements Adapter.ClickList
     private ActionMode actionMode;
     private RecyclerView recyclerView;
     private Adapter adapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        swipeRefreshLayout = findViewById(R.id.swipeToRefresh);
+        refreshMainActivity();
 
         //setup recyclerView
         recyclerView = findViewById(R.id.recyclerView);
@@ -43,19 +49,33 @@ public class MainActivity extends AppCompatActivity implements Adapter.ClickList
         carHandler.getAllCars(this, adapter, MainActivity.this);
     }
 
+    private void refreshMainActivity() {
+        swipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        reloadData();
+                        //Refresh Animation for 0.5s
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                swipeRefreshLayout.setRefreshing(false);
+                            }
+                        }, 500);
+                    }
+                }
+        );
+    }
 
-    public void reloadData(){
+    public void reloadData() {
         carHandler.getLocalCarList().clear();
         recyclerView.removeAllViews();
         carHandler.getAllCars(this, adapter, MainActivity.this);
     }
 
 
-    public void refreshData(View view) {
-        reloadData();
-    }
-
-    public void addCarButton(View view){
+    private void addCarButton(View view) {
         Toast.makeText(this, "Create Car ", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(this, CarCreateActivity.class);
@@ -107,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements Adapter.ClickList
                 carHandler.deleteCar(MainActivity.this, carHandler.getCarPosition(), MainActivity.this);
                 mode.finish();
                 return true;
-            } else if (item.getItemId() == R.id.edit_car){
+            } else if (item.getItemId() == R.id.edit_car) {
                 Intent intent = new Intent(MainActivity.this, CarEditActivity.class);
                 intent.putExtra("CAR", carHandler.getLocalCarList().get(carHandler.getCarPosition()));
                 startActivity(intent);

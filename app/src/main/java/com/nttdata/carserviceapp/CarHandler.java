@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -21,7 +23,7 @@ import java.util.Iterator;
 
 public class CarHandler {
 
-    private String API_IP = "http://192.168.178.55:8080/car";
+    private final String API_IP = "http://192.168.178.55:8080/car";
 
     private ArrayList<Car> localCarList = new ArrayList<>();
     private int carPosition;
