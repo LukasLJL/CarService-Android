@@ -23,6 +23,7 @@
         <activity android:name=".CarDetailsActivity" />
         <activity android:name=".CarCreateActivity" />
         <activity android:name=".CarEditActivity" />
+        <activity android:name=".SettingsActivity" android:parentActivityName=".MainActivity"/>
     </application>
 
 </manifest>

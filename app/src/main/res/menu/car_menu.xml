@@ -4,11 +4,13 @@
     <item
         android:id="@+id/delete_car"
         android:title="Delete Car"
+        app:showAsAction="always"
         android:icon="@drawable/ic_delete" />
 
     <item
         android:id="@+id/edit_car"
         android:title="Edit Car"
+        app:showAsAction="always"
         android:icon="@drawable/ic_edit" />
 
 

@@ -10,10 +10,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements Adapter.ClickList
     private Adapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private View selectedItemView;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements Adapter.ClickList
         //setup CarHandler
         carHandler = new CarHandler();
 
+        carHandler.setIPFromSettings(this);
+
         //setup recyclerView adapter
         adapter = new Adapter(MainActivity.this, carHandler.getLocalCarList(), MainActivity.this);
         recyclerView.setAdapter(adapter);
@@ -51,6 +54,24 @@ public class MainActivity extends AppCompatActivity implements Adapter.ClickList
 
         //download car from server
         carHandler.getAllCars(this, adapter, MainActivity.this);
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.app_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.menu_settings){
+            Toast.makeText(this, "SETTINGS", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void refreshMainActivity() {
@@ -75,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements Adapter.ClickList
     public void reloadData() {
         carHandler.getLocalCarList().clear();
         recyclerView.removeAllViews();
+        carHandler.setIPFromSettings(this);
         carHandler.getAllCars(this, adapter, MainActivity.this);
     }
 

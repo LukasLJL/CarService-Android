@@ -1,10 +1,13 @@
 package com.nttdata.carserviceapp;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.preference.PreferenceManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import android.content.SharedPreferences;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,10 +28,16 @@ import java.util.Iterator;
 
 public class CarHandler {
 
-    private final String API_IP = "http://192.168.137.1:8080/car";
+    public final String defaultIP = "192.168.178.55";
+    private String API_IP;
 
     private ArrayList<Car> localCarList = new ArrayList<>();
     private int carPosition;
+
+    public void setIPFromSettings (Context context){
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+        API_IP = "http://" + settings.getString("API-IP", getDefaultIP()) + ":8080/car";
+    }
 
 
     public void getAllCars(Context context, Adapter adapter, Context mainActivityContext) {
@@ -77,7 +86,6 @@ public class CarHandler {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(mainActivityContext, "Error getting Server Data", Toast.LENGTH_LONG).show();
-                        Toast.makeText(mainActivityContext, error.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
         queue.add(request);
@@ -228,5 +236,9 @@ public class CarHandler {
 
     public void setCarPosition(int carPosition) {
         this.carPosition = carPosition;
+    }
+
+    public String getDefaultIP() {
+        return defaultIP;
     }
 }
