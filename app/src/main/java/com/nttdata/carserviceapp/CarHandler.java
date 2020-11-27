@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import androidx.preference.PreferenceManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import android.content.SharedPreferences;
 
 import com.android.volley.Request;
@@ -34,7 +35,7 @@ public class CarHandler {
     private ArrayList<Car> localCarList = new ArrayList<>();
     private int carPosition;
 
-    public void setIPFromSettings (Context context){
+    public void setIPFromSettings(Context context) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         API_IP = "http://" + settings.getString("API-IP", getDefaultIP()) + ":8080/car";
     }
@@ -91,39 +92,36 @@ public class CarHandler {
         queue.add(request);
     }
 
-    public void getSingleCar(Context context, Adapter adapter, Context mainActivityContext, int carID){
+    public void getSingleCar(Context context, Adapter adapter, Context mainActivityContext, int carID) {
         String getURL = API_IP + "/list/" + carID;
 
         RequestQueue queue = Volley.newRequestQueue(context);
 
         localCarList.clear();
 
+        Log.e("URL", getURL);
+
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, getURL, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            for (Iterator<String> it = response.keys(); it.hasNext(); ) {
-                                String car_key = it.next();
-                                JSONObject car = response.getJSONObject(car_key);
+                            Car tempCar = new Car();
 
-                                Car tempCar = new Car();
+                            tempCar.setId(response.getInt("id"));
+                            tempCar.setMarke(response.getString("marke"));
+                            tempCar.setModel(response.getString("model"));
+                            tempCar.setFarbe(response.getString("farbe"));
+                            tempCar.setGewicht(response.getInt("gewicht"));
+                            tempCar.setDrehmoment(response.getInt("drehmoment"));
+                            tempCar.setLeistung(response.getInt("leistung"));
+                            tempCar.setTueren(response.getInt("tueren"));
+                            tempCar.setKlasse(response.getString("klasse"));
+                            tempCar.setMotor_art(response.getString("motor_art"));
 
-                                tempCar.setId(car.getInt("id"));
-                                tempCar.setMarke(car.getString("marke"));
-                                tempCar.setModel(car.getString("model"));
-                                tempCar.setFarbe(car.getString("farbe"));
-                                tempCar.setGewicht(car.getInt("gewicht"));
-                                tempCar.setDrehmoment(car.getInt("drehmoment"));
-                                tempCar.setLeistung(car.getInt("leistung"));
-                                tempCar.setTueren(car.getInt("tueren"));
-                                tempCar.setKlasse(car.getString("klasse"));
-                                tempCar.setMotor_art(car.getString("motor_art"));
-
-                                localCarList.add(tempCar);
-                            }
-
+                            localCarList.add(tempCar);
                             adapter.notifyDataSetChanged();
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

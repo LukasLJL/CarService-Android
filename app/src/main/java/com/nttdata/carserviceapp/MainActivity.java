@@ -13,9 +13,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -54,19 +56,52 @@ public class MainActivity extends AppCompatActivity implements Adapter.ClickList
 
         //download car from server
         carHandler.getAllCars(this, adapter, MainActivity.this);
-
     }
 
+
+    //Toolbar Show Menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.app_menu, menu);
+
+        MenuItem menuItem = menu.findItem(R.id.menu_search);
+        SearchView searchView = (SearchView) menuItem.getActionView();
+
+        searchView.setQueryHint("Search for Car ID");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.e("Searched for", query);
+                searchForSingleCar(Integer.parseInt(query));
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return true;
+            }
+        });
+
+        menuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                reloadData();
+                return true;
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
 
+    //Toolbar Menu Handle Click
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.menu_settings){
+        if (item.getItemId() == R.id.menu_settings) {
             Toast.makeText(this, "SETTINGS", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
@@ -74,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements Adapter.ClickList
         return super.onOptionsItemSelected(item);
     }
 
+    //Pull-Down to Refresh
     private void refreshMainActivity() {
         swipeRefreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
@@ -93,6 +129,15 @@ public class MainActivity extends AppCompatActivity implements Adapter.ClickList
         );
     }
 
+    public void searchForSingleCar(int id){
+        carHandler.getLocalCarList().clear();
+        recyclerView.removeAllViews();
+        carHandler.setIPFromSettings(this);
+        carHandler.getSingleCar(this, adapter, MainActivity.this, id);
+    }
+
+
+
     public void reloadData() {
         carHandler.getLocalCarList().clear();
         recyclerView.removeAllViews();
@@ -103,7 +148,6 @@ public class MainActivity extends AppCompatActivity implements Adapter.ClickList
 
     public void addCarButton(View view) {
         Toast.makeText(this, "Create Car ", Toast.LENGTH_SHORT).show();
-
         Intent intent = new Intent(this, CarCreateActivity.class);
         startActivity(intent);
     }
@@ -168,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements Adapter.ClickList
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             ConstraintLayout selectedItem = selectedItemView.findViewById(R.id.car_item);
-            selectedItem.setBackgroundColor(ContextCompat.getColor(MainActivity.this,  R.color.white));
+            selectedItem.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.white));
             actionMode = null;
         }
     };
