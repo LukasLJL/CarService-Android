@@ -3,6 +3,8 @@ package com.nttdata.carserviceapp;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -21,6 +23,11 @@ public class CarDetailsActivity extends AppCompatActivity  {
     private TextView textView_farbe;
     private TextView textView_motor_art;
     private TextView textView_klasse;
+    private ImageView carBrandImage;
+    private CarBrandImageLoader carBrandImageLoader;
+
+    private Car detailCar;
+
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -29,6 +36,8 @@ public class CarDetailsActivity extends AppCompatActivity  {
         setContentView(R.layout.car_details);
         Intent iin = getIntent();
         Bundle bundle = iin.getExtras();
+
+        carBrandImageLoader = new CarBrandImageLoader();
 
         //init all TextViews
         textView_id = findViewById(R.id.car_detail_id);
@@ -41,9 +50,10 @@ public class CarDetailsActivity extends AppCompatActivity  {
         textView_farbe = findViewById(R.id.car_detail_farbe);
         textView_motor_art = findViewById(R.id.car_detail_motor_art);
         textView_klasse = findViewById(R.id.car_detail_klasse);
+        carBrandImage = findViewById(R.id.car_detail_image);
 
         if (bundle != null){
-            Car detailCar = (Car) bundle.get("CAR");
+            detailCar = (Car) bundle.get("CAR");
             textView_id.setText(detailCar.getId().toString());
             textView_marke.setText(detailCar.getMarke());
             textView_model.setText(detailCar.getModel());
@@ -54,7 +64,15 @@ public class CarDetailsActivity extends AppCompatActivity  {
             textView_farbe.setText(detailCar.getFarbe());
             textView_motor_art.setText(detailCar.getMotor_art());
             textView_klasse.setText(detailCar.getKlasse());
+            carBrandImageLoader.getImage(carBrandImage, detailCar.getMarke());
+
         }
 
+    }
+
+    public void editCarButton(View view) {
+        Intent intent = new Intent(CarDetailsActivity.this, CarEditActivity.class);
+        intent.putExtra("CAR", detailCar);
+        startActivity(intent);
     }
 }

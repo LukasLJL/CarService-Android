@@ -25,7 +25,7 @@ import java.util.Iterator;
 
 public class CarHandler {
 
-    private final String API_IP = "http://192.168.178.55:8080/car";
+    private final String API_IP = "http://192.168.137.1:8080/car";
 
     private ArrayList<Car> localCarList = new ArrayList<>();
     private int carPosition;
@@ -66,6 +66,54 @@ public class CarHandler {
                                     return o1.getId().compareTo(o2.getId());
                                 }
                             });
+
+                            adapter.notifyDataSetChanged();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(mainActivityContext, "Error getting Server Data", Toast.LENGTH_LONG).show();
+                        Toast.makeText(mainActivityContext, error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+        queue.add(request);
+    }
+
+    public void getSingleCar(Context context, Adapter adapter, Context mainActivityContext, int carID){
+        String getURL = API_IP + "/list/" + carID;
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+
+        localCarList.clear();
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, getURL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            for (Iterator<String> it = response.keys(); it.hasNext(); ) {
+                                String car_key = it.next();
+                                JSONObject car = response.getJSONObject(car_key);
+
+                                Car tempCar = new Car();
+
+                                tempCar.setId(car.getInt("id"));
+                                tempCar.setMarke(car.getString("marke"));
+                                tempCar.setModel(car.getString("model"));
+                                tempCar.setFarbe(car.getString("farbe"));
+                                tempCar.setGewicht(car.getInt("gewicht"));
+                                tempCar.setDrehmoment(car.getInt("drehmoment"));
+                                tempCar.setLeistung(car.getInt("leistung"));
+                                tempCar.setTueren(car.getInt("tueren"));
+                                tempCar.setKlasse(car.getString("klasse"));
+                                tempCar.setMotor_art(car.getString("motor_art"));
+
+                                localCarList.add(tempCar);
+                            }
 
                             adapter.notifyDataSetChanged();
                         } catch (JSONException e) {

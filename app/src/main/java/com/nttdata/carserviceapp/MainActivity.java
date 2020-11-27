@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements Adapter.ClickList
     private RecyclerView recyclerView;
     private Adapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements Adapter.ClickList
         adapter = new Adapter(MainActivity.this, carHandler.getLocalCarList(), MainActivity.this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
 
         //download car from server
         carHandler.getAllCars(this, adapter, MainActivity.this);
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements Adapter.ClickList
     }
 
 
-    private void addCarButton(View view) {
+    public void addCarButton(View view) {
         Toast.makeText(this, "Create Car ", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(this, CarCreateActivity.class);
@@ -141,4 +142,5 @@ public class MainActivity extends AppCompatActivity implements Adapter.ClickList
             actionMode = null;
         }
     };
+
 }
