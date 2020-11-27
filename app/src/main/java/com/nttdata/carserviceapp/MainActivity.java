@@ -13,6 +13,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -24,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements Adapter.ClickList
     private RecyclerView recyclerView;
     private Adapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private Toolbar toolbar;
+    private View selectedItemView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +104,9 @@ public class MainActivity extends AppCompatActivity implements Adapter.ClickList
         if (actionMode != null) {
             actionMode.finish();
         }
+        ConstraintLayout selectedItem = v.findViewById(R.id.car_item);
+        selectedItem.setBackgroundColor(ContextCompat.getColor(this, android.R.color.darker_gray));
+        selectedItemView = v;
         carHandler.setCarPosition(position);
         actionMode = startSupportActionMode(actionModeCallback);
     }
@@ -139,6 +145,8 @@ public class MainActivity extends AppCompatActivity implements Adapter.ClickList
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
+            ConstraintLayout selectedItem = selectedItemView.findViewById(R.id.car_item);
+            selectedItem.setBackgroundColor(ContextCompat.getColor(MainActivity.this,  R.color.white));
             actionMode = null;
         }
     };

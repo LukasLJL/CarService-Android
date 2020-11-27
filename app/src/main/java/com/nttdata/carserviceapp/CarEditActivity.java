@@ -110,6 +110,8 @@ public class CarEditActivity extends AppCompatActivity {
         }
 
         carHandler.editCar(this, editCar);
+
+        finish();
     }
 }
 

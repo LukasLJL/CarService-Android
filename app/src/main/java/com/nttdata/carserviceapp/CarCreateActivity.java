@@ -87,5 +87,7 @@ public class CarCreateActivity extends AppCompatActivity {
         }
 
         carHandler.createCar(this, createCar);
+
+        finish();
     }
 }

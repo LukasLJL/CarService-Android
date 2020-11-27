@@ -3,6 +3,7 @@ package com.nttdata.carserviceapp;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 public class CarBrandImageLoader {
@@ -29,7 +30,6 @@ public class CarBrandImageLoader {
                         .error(R.mipmap.ic_launcher)
                         .into(imageView);
                 Log.e("Error", "Brand not found");
-
         }
     }
 
